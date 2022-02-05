@@ -1,184 +1,401 @@
 import * as React from "react"
+import { graphql } from 'gatsby';
+import { Link } from 'gatsby';
+import { GatsbyImage, getImage } from 'gatsby-plugin-image';
+import { InView } from 'react-intersection-observer';
+import styled from 'styled-components';
 
-// styles
-const pageStyles = {
-  color: "#232129",
-  padding: 96,
-  fontFamily: "-apple-system, Roboto, sans-serif, serif",
-}
-const headingStyles = {
-  marginTop: 0,
-  marginBottom: 64,
-  maxWidth: 320,
-}
-const headingAccentStyles = {
-  color: "#663399",
-}
-const paragraphStyles = {
-  marginBottom: 48,
-}
-const codeStyles = {
-  color: "#8A6534",
-  padding: 4,
-  backgroundColor: "#FFF4DB",
-  fontSize: "1.25rem",
-  borderRadius: 4,
-}
-const listStyles = {
-  marginBottom: 96,
-  paddingLeft: 0,
-}
-const listItemStyles = {
-  fontWeight: 300,
-  fontSize: 24,
-  maxWidth: 560,
-  marginBottom: 30,
-}
+import SEO from '../components/SEO';
+import { DrawSkills } from "../components/DrawSkills";
+import { ExpandInfo } from "../components/ExpandInfo";
+import { Fade, FadeAndSlide, Scale, Bounce } from "../components/styles/Animations";
 
-const linkStyle = {
-  color: "#8954A8",
-  fontWeight: "bold",
-  fontSize: 16,
-  verticalAlign: "5%",
-}
+import filler from '../images/amends/9.jpg';
 
-const docLinkStyle = {
-  ...linkStyle,
-  listStyleType: "none",
-  marginBottom: 24,
-}
+export const data = graphql`
+    query {
+        profilePic: contentfulAsset(contentful_id: {eq: "6z4EKuoA7WjfxmJpPeZNbN"}) {
+            file {
+                url
+            }
+        }
+        # find way to make this less repetitive?..
+        header: contentfulTitle(contentful_id: {eq: "1WS3lEghvb0lRJ5lDWsf8"}) {
+            title
+        }
+        skills: contentfulTitle(contentful_id: {eq: "3vVyaoJvLxiaHFjfKhLYCx"}) {
+            title
+        }
+        clients: contentfulTitle(contentful_id: {eq: "2407IlqEXcDygi0AIN8sZq"}) {
+            title
+        }
+        softwareInfo: contentfulTitle(contentful_id: {eq: "4ChLhWZjJEhMhpnkua5uX0"}) {
+            title
+        }
+        code: contentfulTitleAndParagraph(contentful_id: {eq: "jrarOEY1eHz0reoXAIaXr"}) {
+            title
+            info: paragraph {
+                raw
+            }
+        }
+        sketch: contentfulTitleAndParagraph(contentful_id: {eq: "fidVhlUq5pHcCvkgbDA69"}) {
+            title
+            info: paragraph {
+                raw
+            }
+        }
+        ux: contentfulTitleAndParagraph(contentful_id: {eq: "DOXv0nuVEDX2vXjZE6BS9"}) {
+            title
+            info: paragraph {
+                raw
+            }
+        }
+        allContentfulProject {
+            projects: nodes {
+                id
+                slug
+                client {
+                    name
+                    logo: logoWhite {
+                        gatsbyImageData(placeholder: BLURRED, width: 180)
+                    }
+                    logoColour: logo {
+                        gatsbyImageData(placeholder: BLURRED, width: 180)
+                    }
+                }
+                title
+                preview {
+                    thumbnail {
+                        file {
+                            url
+                        }
+                    }
+                }
+                indexOrder
+            }
+        }
+        contentfulSoftware(contentful_id: {eq: "t6VMdS6zTDbOGiGVkXDZz"}) {
+            software: softwareCollection {
+                id
+                title
+                gatsbyImageData(placeholder: BLURRED, height: 75)
+            }
+        }
+    }
+`;
 
-const descriptionStyle = {
-  color: "#232129",
-  fontSize: 14,
-  marginTop: 10,
-  marginBottom: 0,
-  lineHeight: 1.25,
-}
+export default function IndexPage({ data }) {
 
-const docLink = {
-  text: "Documentation",
-  url: "https://www.gatsbyjs.com/docs/",
-  color: "#8954A8",
-}
+    const { profilePic, header, skills, clients, softwareInfo, code, sketch, ux } = data;
 
-const badgeStyle = {
-  color: "#fff",
-  backgroundColor: "#088413",
-  border: "1px solid #088413",
-  fontSize: 11,
-  fontWeight: "bold",
-  letterSpacing: 1,
-  borderRadius: 4,
-  padding: "4px 6px",
-  display: "inline-block",
-  position: "relative",
-  top: -2,
-  marginLeft: 10,
-  lineHeight: 1,
-}
+    const { software } = data.contentfulSoftware;
+    const { projects } = data.allContentfulProject;
 
-// data
-const links = [
-  {
-    text: "Tutorial",
-    url: "https://www.gatsbyjs.com/docs/tutorial/",
-    description:
-      "A great place to get started if you're new to web development. Designed to guide you through setting up your first Gatsby site.",
-    color: "#E95800",
-  },
-  {
-    text: "How to Guides",
-    url: "https://www.gatsbyjs.com/docs/how-to/",
-    description:
-      "Practical step-by-step guides to help you achieve a specific goal. Most useful when you're trying to get something done.",
-    color: "#1099A8",
-  },
-  {
-    text: "Reference Guides",
-    url: "https://www.gatsbyjs.com/docs/reference/",
-    description:
-      "Nitty-gritty technical descriptions of how Gatsby works. Most useful when you need detailed information about Gatsby's APIs.",
-    color: "#BC027F",
-  },
-  {
-    text: "Conceptual Guides",
-    url: "https://www.gatsbyjs.com/docs/conceptual/",
-    description:
-      "Big-picture explanations of higher-level Gatsby concepts. Most useful for building understanding of a particular topic.",
-    color: "#0D96F2",
-  },
-  {
-    text: "Plugin Library",
-    url: "https://www.gatsbyjs.com/plugins",
-    description:
-      "Add functionality and customize your Gatsby site or app with thousands of plugins built by our amazing developer community.",
-    color: "#8EB814",
-  },
-  {
-    text: "Build and Host",
-    url: "https://www.gatsbyjs.com/cloud",
-    badge: true,
-    description:
-      "Now you’re ready to show the world! Give your Gatsby site superpowers: Build and host on Gatsby Cloud. Get started for free!",
-    color: "#663399",
-  },
-]
+    projects.sort((a, b) => a.indexOrder - b.indexOrder);
 
-// markup
-const IndexPage = () => {
-  return (
-    <main style={pageStyles}>
-      <title>Home Page</title>
-      <h1 style={headingStyles}>
-        Congratulations
-        <br />
-        <span style={headingAccentStyles}>— you just made a Gatsby site! </span>
-        <span role="img" aria-label="Party popper emojis">
-          🎉🎉🎉
-        </span>
-      </h1>
-      <p style={paragraphStyles}>
-        Edit <code style={codeStyles}>src/pages/index.js</code> to see this page
-        update in real-time.{" "}
-        <span role="img" aria-label="Sunglasses smiley emoji">
-          😎
-        </span>
-      </p>
-      <ul style={listStyles}>
-        <li style={docLinkStyle}>
-          <a
-            style={linkStyle}
-            href={`${docLink.url}?utm_source=starter&utm_medium=start-page&utm_campaign=minimal-starter`}
-          >
-            {docLink.text}
-          </a>
-        </li>
-        {links.map(link => (
-          <li key={link.url} style={{ ...listItemStyles, color: link.color }}>
-            <span>
-              <a
-                style={linkStyle}
-                href={`${link.url}?utm_source=starter&utm_medium=start-page&utm_campaign=minimal-starter`}
-              >
-                {link.text}
-              </a>
-              {link.badge && (
-                <span style={badgeStyle} aria-label="New Badge">
-                  NEW!
-                </span>
-              )}
-              <p style={descriptionStyle}>{link.description}</p>
-            </span>
-          </li>
-        ))}
-      </ul>
-      <img
-        alt="Gatsby G Logo"
-        src="data:image/svg+xml,%3Csvg width='24' height='24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2a10 10 0 110 20 10 10 0 010-20zm0 2c-3.73 0-6.86 2.55-7.75 6L14 19.75c3.45-.89 6-4.02 6-7.75h-5.25v1.5h3.45a6.37 6.37 0 01-3.89 4.44L6.06 9.69C7 7.31 9.3 5.63 12 5.63c2.13 0 4 1.04 5.18 2.65l1.23-1.06A7.959 7.959 0 0012 4zm-8 8a8 8 0 008 8c.04 0 .09 0-8-8z' fill='%23639'/%3E%3C/svg%3E"
-      />
-    </main>
-  )
-}
+    return (
+        <>
+        <SEO title="Home" />
+        <main>
+            <Intro>
+                <ProfileImageContainer>
+                    <Profile src={`${profilePic?.file?.url}`} alt="me" />
+                </ProfileImageContainer>
+                <H1 $duration={1} $delay={1.5}>{header.title}</H1>
+            </Intro>
+            {/* Skills */}
+            <InView threshold={1} triggerOnce={true}>
+                {({ inView, ref }) => (
+                    <Section className="purple">
+                        <h2>{skills.title}</h2>
+                        <List ref={ref}>
+                            <ListItem>
+                                <DrawSkills skill="code" active={inView} />
+                                <FadeContainer $active={inView} duration={2}>
+                                    <ExpandInfo content={code} />
+                                </FadeContainer>
+                            </ListItem>
+                            <ListItem>
+                                <DrawSkills skill="sketch" active={inView} />
+                                <FadeContainer $active={inView} duration={2}>
+                                    <ExpandInfo content={sketch} />
+                                </FadeContainer>
+                            </ListItem>
+                            <ListItem>
+                                <DrawSkills skill="ux" active={inView} />
+                                <FadeContainer $active={inView} duration={2}>
+                                    <ExpandInfo content={ux} />
+                                </FadeContainer>
+                            </ListItem>
+                        </List>
+                    </Section>
+                )}
+            </InView>
+            {/* Blank */}
+            <Filler/>
+            {/* Projects */}
+            <InView threshold={0.3} triggerOnce={true}>
+                {({ inView, ref }) => (
+                    <WorkSection>
+                        <H2 aria-label="Projects I've worked on for clients">{clients.title}</H2>
+                        <WorkList ref={ref}>
+                            {projects?.map((project, i) => (
+                                <WorkItem key={project?.id}>
+                                    <WorkLink 
+                                    to={`/work#${project?.slug}`} 
+                                    aria-label={`Redirect to ${project?.title} for ${project?.client.name}`}
+                                    $active={inView} 
+                                    $delay={i * 0.2} 
+                                    >
+                                        <ImageContainer img={`${project?.preview?.thumbnail?.file?.url}`}>
+                                            <WorkImage image={project?.client?.logo ? getImage(project.client.logo) : getImage(project.client.logoColour)} alt="" />
+                                        </ImageContainer>
+                                    </WorkLink>
+                                </WorkItem>
+                            ))}
+                        </WorkList>
+                    </WorkSection>
+                )}
+            </InView>
+            {/* Software */}
+            <InView threshold={0.3} triggerOnce={true}>
+                {({ inView, ref }) => (
+                    <SoftwareSection className="purple">
+                        <H2 aria-label="Software I've used">{softwareInfo.title}</H2>
+                        <SoftwareList ref={ref}>
+                            {software?.map((software) => (
+                                <Software $active={inView} key={software.id}>
+                                    <SoftwareLogo image={getImage(software)} alt={software.title} objectFit="contain" />
+                                </Software>
+                            ))}
+                        </SoftwareList>
+                    </SoftwareSection>
+                )}
+            </InView>
+        </main>
+        </>
+    );
+};
 
-export default IndexPage
+const SoftwareLogo = styled(GatsbyImage)`
+    height: 100%;
+
+    div {
+        width: 100%;
+        height: 100%;
+    };
+`;
+
+const Section = styled.section`
+    display: flex;
+    align-items: center;
+    flex-flow: column wrap;
+    padding: 2rem 0;
+    text-align: center;
+
+    &.purple {
+        color: white;
+        background-color: #2b194d;
+    };
+
+    @media only screen and (max-width: 767px) {
+        padding-left: 2em;
+        padding-right: 2em;
+    };
+
+    @media only screen and (max-width: 480px) {
+        padding-left: 1em;
+        padding-right: 1em;
+    };
+`;
+
+const WorkSection = styled(Section)`
+    margin: 0 auto;
+    max-width: 1280px;
+    padding-bottom: 5rem;
+`;
+
+const SoftwareSection = styled(Section)`
+    padding-bottom: 4rem;
+`;
+
+const Intro = styled(Section)`
+    padding-top: 0;
+    padding-bottom: 0;
+    max-width: 1280px;
+    margin: 0 auto;
+
+    @media only screen and (max-width: 767px) {
+        margin: 0px 2em;
+    };
+`;
+
+const ProfileImageContainer = styled.div`
+    margin: 15vh auto;
+    width: 25%;
+    ${Bounce};
+
+    @media only screen and (max-width: 767px) {
+        width: 40%;
+        margin: 6em auto 3em;
+    };
+
+    @media only screen and (max-width: 480px) {
+        width: 50%;
+    };
+`;
+
+const Profile = styled.img`
+    width: 100%;
+`;
+
+const H1 = styled.h1`
+    ${FadeAndSlide};
+`;
+
+const H2 = styled.h2`
+    margin-bottom: 12vh;
+
+    @media only screen and (max-width: 767px) {
+        margin-bottom: 0;
+    };
+`;
+
+const WorkItem = styled.li`
+    width: 33%;
+    margin: 2rem auto;
+    min-width: 200px;
+
+    @media only screen and (max-width: 480px) {
+        width: 100%;
+    };
+`;
+
+const WorkLink = styled(Link)`
+    display: block;
+    width: 100%;
+    height: 100%;
+    transform: translate3d(0,0,0) scale(0);
+    ${props => props.$active ? Scale : null};
+`;
+
+const ImageContainer = styled.div`
+    background-color: #2b194d;
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    border: 6px solid #2b194d;
+    border-radius: 100%;
+    overflow: hidden;
+    background-image: url(${props => props.img});
+
+    &:hover {
+        background-image: none;
+    };
+
+    @media only screen and (max-width: 767px) {
+        background-image: none;
+        width: 175px;
+        height: 175px;
+    };
+`;
+
+const WorkImage = styled(GatsbyImage)`
+    opacity: 0;
+    width: 100%;
+    /* transform: translate(0px, 73%); */
+    height: 100%;
+    transition: opacity 0.5s linear 0s;
+    vertical-align: middle;
+    clip-path: circle(54%);
+
+    &:hover {
+        opacity: 1;
+    };
+
+    img {
+        width: 80%;
+        height: auto;
+        margin: auto;
+    };
+
+    @media only screen and (max-width: 767px) {
+        opacity: 1;
+    };
+`;
+
+const List = styled.ul`
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    max-width: 1280px;
+    width: 100%;
+    padding: 0;
+    margin-top: 12vh;
+
+    @media only screen and (max-width: 767px) {
+        margin-top: 0;
+    };
+`;
+
+const SoftwareList = styled.ul`
+    display: flex;
+    flex-flow: row wrap;
+    max-width: 1280px;
+    justify-content: center;
+    padding: 0;
+`;
+
+const WorkList = styled.ul`
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+`;
+
+const ListItem = styled.li`
+    list-style-type: none;
+    text-align: center;
+    margin: 0 auto;
+    width: 33%;
+
+    @media only screen and (max-width: 767px) {
+        width: 100%;
+    };
+`;
+
+const FadeContainer = styled.div`
+    opacity: 0;
+    ${props => props.$active ? Fade : null};
+`;
+
+const Software = styled.li`
+    list-style-type: none;
+    margin: 4rem;
+    height: 75px;
+    opacity: 0;
+    ${props => props.$active ? Fade : null};
+
+    @media only screen and (max-width: 767px) {
+        margin: 3em 2em;
+        height: 60px;
+    };
+
+    @media only screen and (max-width: 480px) {
+        margin: 2em;
+        height: 50px;
+    };
+`;
+
+const Filler = styled.div`
+    background-image: url(${filler});
+    background-attachment: fixed;
+    background-size: cover;
+    height: 650px;
+
+    @media only screen and (max-width: 767px) {
+        height: 300px;
+        min-height: 35vh;
+    };
+`;
