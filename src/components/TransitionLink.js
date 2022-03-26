@@ -6,15 +6,20 @@ import styled, { keyframes } from 'styled-components';
 
 import { Slide } from "../components/styles/Animations";
 
-export const TransitionLink = ({ to, children, $delay }) => {
+export const TransitionLink = ({ to, children, delay }) => {
     
     const { pathname } = useLocation();
 
     const [transitioning, setTransitioning] = useState(false);
+    const [transitioned, setTransitioned] = useState(true);
 
     const timer = useRef(null);
 
     useEffect(() => {
+        timer.current = setTimeout(() => {
+            setTransitioned(true);
+        }, 250);
+
         return () => {
             setTransitioning(false);
             clearTimeout(timer.current);
@@ -27,6 +32,7 @@ export const TransitionLink = ({ to, children, $delay }) => {
 
         if (to !== pathname) {
             setTransitioning(true);
+            setTransitioned(false);
 
             timer.current = setTimeout(() => {
                 navigate(to);
@@ -36,8 +42,10 @@ export const TransitionLink = ({ to, children, $delay }) => {
 
     return (
         <>
-        <PageTransition $active={transitioning ? true : false}/>
-        <StyledLink to={to} onClick={e => onClickHandler(e)} $delay={$delay}>{children}</StyledLink>
+            {!transitioned && 
+                <PageTransition $active={transitioning ? true : false} />
+            }
+            <StyledLink to={to} onClick={e => onClickHandler(e)} $delay={delay}>{children}</StyledLink>
         </>
     );
 };

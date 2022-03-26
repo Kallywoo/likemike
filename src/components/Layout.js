@@ -1,25 +1,19 @@
 import React from 'react';
 import { Header } from './Header';
 import { Footer } from './Footer';
-import styled, { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 
 export const Layout = ({ children, location }) => {
 
     return (
         <>
-        <GlobalStyle />
-        <Header props={location} />
-        <SkipContent id="skip" tabIndex="-1">Main Content</SkipContent>
-        {children}
-        <Footer props={location} />
+            <GlobalStyle />
+            <Header props={location} />
+            <div id="skip">{children}</div>
+            <Footer props={location} />
         </>
     );
 };
-
-const SkipContent = styled.h2`
-  position: absolute;
-  top: -1000%;
-`;
 
 const GlobalStyle = createGlobalStyle`
 
@@ -38,7 +32,7 @@ const GlobalStyle = createGlobalStyle`
         border-bottom: 5px solid #2B194D;
     };
 
-    main {
+    #skip {
         flex: 1;
         /* padding-top: 3rem; */
     };

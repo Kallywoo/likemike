@@ -95,84 +95,84 @@ export default function IndexPage({ data }) {
 
     return (
         <>
-        <SEO title="Home" />
-        <main>
-            <Intro>
-                <ProfileImageContainer>
-                    <Profile src={`${profilePic?.file?.url}`} alt="me" />
-                </ProfileImageContainer>
-                <H1 $duration={1} $delay={1.5}>{header.title}</H1>
-            </Intro>
-            {/* Skills */}
-            <InView threshold={1} triggerOnce={true}>
-                {({ inView, ref }) => (
-                    <Section className="purple">
-                        <h2>{skills.title}</h2>
-                        <List ref={ref}>
-                            <ListItem>
-                                <DrawSkills skill="code" active={inView} />
-                                <FadeContainer $active={inView} duration={2}>
-                                    <ExpandInfo content={code} />
-                                </FadeContainer>
-                            </ListItem>
-                            <ListItem>
-                                <DrawSkills skill="sketch" active={inView} />
-                                <FadeContainer $active={inView} duration={2}>
-                                    <ExpandInfo content={sketch} />
-                                </FadeContainer>
-                            </ListItem>
-                            <ListItem>
-                                <DrawSkills skill="ux" active={inView} />
-                                <FadeContainer $active={inView} duration={2}>
-                                    <ExpandInfo content={ux} />
-                                </FadeContainer>
-                            </ListItem>
-                        </List>
-                    </Section>
-                )}
-            </InView>
-            {/* Blank */}
-            <Filler/>
-            {/* Projects */}
-            <InView threshold={0.3} triggerOnce={true}>
-                {({ inView, ref }) => (
-                    <WorkSection>
-                        <H2 aria-label="Projects I've worked on for clients">{clients.title}</H2>
-                        <WorkList ref={ref}>
-                            {projects?.map((project, i) => (
-                                <WorkItem key={project?.id}>
-                                    <WorkLink 
-                                    to={`/work#${project?.slug}`} 
-                                    aria-label={`Redirect to ${project?.title} for ${project?.client.name}`}
-                                    $active={inView} 
-                                    $delay={i * 0.2} 
-                                    >
-                                        <ImageContainer img={`${project?.preview?.thumbnail?.file?.url}`}>
-                                            <WorkImage image={project?.client?.logo ? getImage(project.client.logo) : getImage(project.client.logoColour)} alt="" />
-                                        </ImageContainer>
-                                    </WorkLink>
-                                </WorkItem>
-                            ))}
-                        </WorkList>
-                    </WorkSection>
-                )}
-            </InView>
-            {/* Software */}
-            <InView threshold={0.3} triggerOnce={true}>
-                {({ inView, ref }) => (
-                    <SoftwareSection className="purple">
-                        <H2 aria-label="Software I've used">{softwareInfo.title}</H2>
-                        <SoftwareList ref={ref}>
-                            {software?.map((software) => (
-                                <Software $active={inView} key={software.id}>
-                                    <SoftwareLogo image={getImage(software)} alt={software.title} objectFit="contain" />
-                                </Software>
-                            ))}
-                        </SoftwareList>
-                    </SoftwareSection>
-                )}
-            </InView>
-        </main>
+            <SEO title="Home" />
+            <main>
+                <Intro>
+                    <ProfileImageContainer>
+                        <Profile src={`${profilePic?.file?.url}`} alt="me" width="320" height="320" />
+                    </ProfileImageContainer>
+                    <H1 $duration={1} $delay={1.5}>{header.title}</H1>
+                </Intro>
+                {/* Skills */}
+                <InView threshold={1} triggerOnce={true}>
+                    {({ inView, ref }) => (
+                        <Section className="purple">
+                            <h2>{skills.title}</h2>
+                            <List ref={ref}>
+                                <ListItem>
+                                    <DrawSkills skill="code" active={inView} />
+                                    <FadeContainer $active={inView} duration={2}>
+                                        <ExpandInfo content={code} />
+                                    </FadeContainer>
+                                </ListItem>
+                                <ListItem>
+                                    <DrawSkills skill="sketch" active={inView} />
+                                    <FadeContainer $active={inView} duration={2}>
+                                        <ExpandInfo content={sketch} />
+                                    </FadeContainer>
+                                </ListItem>
+                                <ListItem>
+                                    <DrawSkills skill="ux" active={inView} />
+                                    <FadeContainer $active={inView} duration={2}>
+                                        <ExpandInfo content={ux} />
+                                    </FadeContainer>
+                                </ListItem>
+                            </List>
+                        </Section>
+                    )}
+                </InView>
+                {/* Blank */}
+                <Filler/>
+                {/* Projects */}
+                <InView threshold={0.3} triggerOnce={true}>
+                    {({ inView, ref }) => (
+                        <WorkSection>
+                            <H2 aria-label="Projects I've worked on for clients">{clients.title}</H2>
+                            <WorkList ref={ref}>
+                                {projects?.map((project, i) => (
+                                    <WorkItem key={project?.id}>
+                                        <WorkLink 
+                                            to={`/work#${project?.slug}`} 
+                                            aria-label={`${project?.title} for ${project?.client?.name}`}
+                                            $active={inView} 
+                                            $delay={i * 0.2} 
+                                        >
+                                            <ImageContainer background={`${project?.preview?.thumbnail?.file?.url}`}>
+                                                <WorkImage image={project?.client?.logo ? getImage(project.client.logo) : getImage(project.client.logoColour)} alt="" loading="lazy" />
+                                            </ImageContainer>
+                                        </WorkLink>
+                                    </WorkItem>
+                                ))}
+                            </WorkList>
+                        </WorkSection>
+                    )}
+                </InView>
+                {/* Software */}
+                <InView threshold={0.3} triggerOnce={true}>
+                    {({ inView, ref }) => (
+                        <SoftwareSection className="purple">
+                            <H2 aria-label="Software I've used">{softwareInfo.title}</H2>
+                            <SoftwareList ref={ref}>
+                                {software?.map((software) => (
+                                    <Software $active={inView} key={software?.id}>
+                                        <SoftwareLogo image={getImage(software)} alt={software?.title} objectFit="contain" loading="lazy" />
+                                    </Software>
+                                ))}
+                            </SoftwareList>
+                        </SoftwareSection>
+                    )}
+                </InView>
+            </main>
         </>
     );
 };
@@ -247,6 +247,7 @@ const ProfileImageContainer = styled.div`
 
 const Profile = styled.img`
     width: 100%;
+    height: auto;
 `;
 
 const H1 = styled.h1`
@@ -287,7 +288,7 @@ const ImageContainer = styled.div`
     border: 6px solid #2b194d;
     border-radius: 100%;
     overflow: hidden;
-    background-image: url(${props => props.img});
+    background-image: url(${props => props.background});
 
     &:hover {
         background-image: none;

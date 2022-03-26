@@ -31,63 +31,83 @@ export const Footer = ({ props }) => {
         }
     `);
     
-    
     const { footer, contact } = data;
 
     return (
-        <StyledFooter $small={pathname === "/contact" ? true : false}>
-            {pathname !== "/contact" ? 
+        <StyledFooter $small={pathname.includes("/contact") ? true : false}>
+            {!pathname.includes("/contact") ? 
                 <H2>{footer.title}</H2> 
             : null}
             <InView triggerOnce={true}>
                 {({ inView, ref }) => (
-                    <List ref={ref} $duration={1} $active={inView}>
-                        <SocialItem>
-                            <a href={`https://instagram.com/${contact?.instagram}`} aria-label="Instagram">
-                                <SocialIcon src={instagram} alt="" />
-                            </a>
-                        </SocialItem>
-                        <SocialItem>
-                            <a href={`https://twitter.com/${contact?.twitter}`} aria-label="Twitter">
-                                <SocialIcon src={twitter} alt="" />
-                            </a>
-                        </SocialItem>
-                        <SocialItem>
-                            <a href={`https://uk.linkedin.com/pub/${contact?.linkedIn}`} aria-label="LinkedIn">
-                                <SocialIcon src={linkedin} alt="" />
-                            </a>
-                        </SocialItem>
-                    </List>
+                    <Address>
+                        <List ref={ref} $duration={1} $active={inView}>
+                            {contact?.instagram &&
+                                <SocialItem>
+                                    <a href={`https://instagram.com/${contact.instagram}`} aria-label="Instagram">
+                                        <SocialIcon src={instagram} alt="" />
+                                    </a>
+                                </SocialItem>
+                            }
+                            {contact?.twitter &&
+                                <SocialItem>
+                                    <a href={`https://twitter.com/${contact.twitter}`} aria-label="Twitter">
+                                        <SocialIcon src={twitter} alt="" />
+                                    </a>
+                                </SocialItem>
+                            }
+                            {contact?.linkedIn &&
+                                <SocialItem>
+                                    <a href={`https://uk.linkedin.com/pub/${contact.linkedIn}`} aria-label="LinkedIn">
+                                        <SocialIcon src={linkedin} alt="" />
+                                    </a>
+                                </SocialItem>
+                            }
+                        </List>
+                    </Address>
                 )}
             </InView>
-            {pathname !== "/contact" ? 
+            {!pathname.includes("/contact") ? 
                 <StyledLink to="/contact">Send me a message</StyledLink> 
             : null}
-            <ContactInfo>
-                <ContactItem>
-                    <ContactLink href={`tel:${contact?.phone.replace(/\s+/g, '')}`}>
-                        <Icon src={phone} />
-                        {contact?.phone}
-                    </ContactLink>
-                </ContactItem>
-                <ContactItem>
-                    <ContactLink href={`mailto:${contact?.email}`}>
-                        <Icon src={email} />
-                        {contact?.email}
-                    </ContactLink>
-                </ContactItem>
-                <ContactItem>
-                    <ContactLink href={`https://twitter.com/${contact?.twitter}`}>
-                        <Icon src={twitter} />
-                        @{contact?.twitter}
-                    </ContactLink>
-                </ContactItem>
-            </ContactInfo>
+            <Address>
+                <ContactInfo>
+                    {contact?.phone &&
+                        <ContactItem>
+                            <ContactLink href={`tel:${contact.phone.replace(/\s+/g, '')}`} aria-label={`Phone number: ${contact.phone}`}>
+                                <Icon src={phone} alt="" />
+                                {contact.phone}
+                            </ContactLink>
+                        </ContactItem>
+                    }
+                    {contact?.email &&
+                        <ContactItem>
+                            <ContactLink href={`mailto:${contact.email}`} aria-label={`Email: ${contact?.email}`}>
+                                <Icon src={email} alt="" />
+                                {contact.email}
+                            </ContactLink>
+                        </ContactItem>
+                    }
+                    {contact?.twitter &&
+                        <ContactItem>
+                            <ContactLink href={`https://twitter.com/${contact.twitter}`} aria-label={`Twitter: @${contact.twitter}`}>
+                                <Icon src={twitter} alt="" />
+                                @{contact.twitter}
+                            </ContactLink>
+                        </ContactItem>
+                    }
+                </ContactInfo>
+            </Address>
             <License>social icons by <a href="http://icons8.com">icons8</a></License>
             {/* email and phone from svgrepo */}
         </StyledFooter>
     );
 };
+
+const Address = styled.address`
+    font-style: normal;
+    width: 100%;
+`;
 
 const License = styled.p`
     margin-top: auto;
@@ -95,6 +115,12 @@ const License = styled.p`
     margin-bottom: 1em;
     color: #2b194d;
     text-decoration: none;
+
+    @media only screen and (max-width: 767px) {
+        margin-top: auto;
+        margin-right: auto;
+        font-size: 1em;
+    };
 `;
 
 const StyledFooter = styled.footer`
@@ -105,7 +131,7 @@ const StyledFooter = styled.footer`
     min-height: ${props => props.$small ? null : '100vh'};
 
     @media only screen and (max-width: 767px) {
-        min-height: 600px;
+        min-height: ${props => props.$small ? "500px" : "600px"};
     };
 `;
 
@@ -146,7 +172,7 @@ const SocialItem = styled.li`
     border-radius: 100%;
     transition: all .1s linear;
 
-    &:hover {
+    &:hover, &:focus-within {
         background-color: #00bcd4;
     };
 

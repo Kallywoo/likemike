@@ -52,7 +52,7 @@ export default function ContactPage() {
 
         // const text = JSON.parse(await res.text());
 
-        const res = {status: 0};
+        const res = {status: 401};
         const text = 'error!';
 
         if (res.status >= 400 && res.status < 600) {
@@ -78,67 +78,119 @@ export default function ContactPage() {
             <Main>
                 <Section>
                     <H2 $duration={0.5} $delay={0.25}>Get in touch...</H2>
-                    <Form $duration={0.5} $delay={0.5} onSubmit={handleSubmit}>
-                        <Paragraph>Send me a message and I'll respond as soon as I can!</Paragraph>
-                        <Fieldset disabled={loading}>
-                            <Group>
+                    {!message ? 
+                        <Form $duration={0.5} $delay={0.5} onSubmit={handleSubmit}>
+                            <Paragraph>Send me a message and I'll respond as soon as I can!</Paragraph>
+                            <Fieldset disabled={loading}>
+                                <Group>
+                                    <Input 
+                                        name="name" 
+                                        type="text" 
+                                        value={values.name} 
+                                        onChange={handleInputChange} 
+                                        required
+                                    />
+                                    <Label htmlFor="name">Name</Label>
+                                    <Highlight />
+                                    <Bar />
+                                </Group>
+                                <Group>
+                                    <Input 
+                                        name="email" 
+                                        type="text" 
+                                        value={values.email} 
+                                        onChange={handleInputChange} 
+                                        required
+                                    />
+                                    <Label htmlFor="email">Email</Label>
+                                    <Highlight />
+                                    <Bar />
+                                </Group>
+                                <Group>
+                                    <Input 
+                                        as="textarea"
+                                        name="message" 
+                                        type="message" 
+                                        value={values.message} 
+                                        onChange={handleInputChange} 
+                                        required
+                                    />
+                                    <Label htmlFor="message">Message</Label>
+                                    <Highlight />
+                                    <Bar />
+                                </Group>
                                 <Input 
-                                    name="name" 
-                                    type="text" 
-                                    value={values.name} 
-                                    onChange={handleInputChange} 
-                                    required
+                                    name="boop"
+                                    type="boop"
+                                    value={values.boop}
+                                    onChange={handleInputChange}
+                                    className="boop"
                                 />
-                                <Label htmlFor="name">Name</Label>
-                                <Highlight />
-                                <Bar />
-                            </Group>
-                            <Group>
-                                <Input 
-                                    name="email" 
-                                    type="text" 
-                                    value={values.email} 
-                                    onChange={handleInputChange} 
-                                    required
-                                />
-                                <Label htmlFor="email">Email</Label>
-                                <Highlight />
-                                <Bar />
-                            </Group>
-                            <Group>
-                                <Input 
-                                    as="textarea"
-                                    name="message" 
-                                    type="message" 
-                                    value={values.message} 
-                                    onChange={handleInputChange} 
-                                    required
-                                />
-                                <Label htmlFor="message">Message</Label>
-                                <Highlight />
-                                <Bar />
-                            </Group>
-                            <Input 
-                                name="boop"
-                                type="boop"
-                                value={values.boop}
-                                onChange={handleInputChange}
-                                className="boop"
-                            />
-                            <Button type="submit" disabled={loading}>Send!</Button>
+                                <Button type="submit" disabled={loading}>Send!</Button>
+                                {loading ? 
+                                    <LoadingContainer>
+                                        <Loading>
+                                            <Spinner />
+                                        </Loading>
+                                    </LoadingContainer>
+                                : null}
+                            </Fieldset>
+                        </Form>
+                    : 
+                        <ResponseContainer>
                             <div aria-live="polite" role="status">
                                 {message ? <p>{message}</p> : ''}
                             </div>
-                            <div aria-live="assertive">
-                                {error ? <RedError>Error: {error}</RedError> : ''}
-                            </div>
-                        </Fieldset>
-                    </Form>
+                        </ResponseContainer>
+                    }
+                    <ResponseContainer>
+                        <div aria-live="assertive">
+                            {error ? <RedError>Error: {error}</RedError> : ''}
+                        </div>
+                    </ResponseContainer>
                 </Section>
             </Main>
         </>
     );
 };
+
+/* --- loading spinner --- */
+/* generated by https://loading.io/ */
+
+const SpinAnimation = keyframes`
+    0% { transform: translate(-50%,-50%) rotate(0deg); }
+    100% { transform: translate(-50%,-50%) rotate(360deg); }
+`;
+
+const LoadingContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+const Loading = styled.div`
+    position: absolute;
+    top: 28%;
+    width: 250px;
+    height: 250px;
+    overflow: hidden;
+    background: none;
+`;
+
+const Spinner = styled.div`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 84.61px;
+    height: 84.61px;
+    border: 13.189999999999998px solid #01bcd4;
+    border-top-color: transparent;
+    border-radius: 50%;
+
+    animation: ${SpinAnimation} 1.4492753623188404s linear infinite;
+
+    box-sizing: content-box;
+`;
 
 /* --- animations --- */
 
@@ -231,6 +283,10 @@ const Fieldset = styled.fieldset`
     margin: 0;
     padding: 0;
     border: none;
+
+    &:disabled {
+        opacity: 50%;
+    };
 `;
 
 const Label = styled.label`
@@ -297,8 +353,20 @@ const Button = styled.button`
         box-shadow: 0 0 8px 5px #d7d4de;
         transition: all .2s ease-out;
     };
+
+    &:disabled {
+        background: #00d3ee;
+        box-shadow: 0 0 8px 5px #d7d4de;
+        cursor: default;
+        opacity: 50%;
+    };
+`;
+
+const ResponseContainer = styled.div`
+    margin-top: 1em;
 `;
 
 const RedError = styled.p`
-    color: red;
+    color: #c74747;
+    font-size: 2em;
 `;
