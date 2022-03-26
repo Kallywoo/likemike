@@ -121,7 +121,7 @@ export default function WorkPage({ data }) {
                                             />
                                         </LogoContainer>
                                         <Title>{project?.title}</Title>
-                                        {project.description && renderRichText(project.description, options)}
+                                        {project.description && renderRichText(project?.description, options)}
                                         <Site href={`http://${project?.link}`}>{project?.link}</Site>
                                     </Project>
                                     <GatsbyImg 

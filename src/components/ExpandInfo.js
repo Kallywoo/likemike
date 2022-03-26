@@ -16,7 +16,7 @@ export const ExpandInfo = ({ content }) => {
     return (
         <React.Fragment key={content.id}>
             <H3>{content.title}</H3>
-            <Button className={open ? "open" : null} onClick={() => setOpen(!open)}>
+            <Button className={open ? "open" : null} onClick={() => setOpen(!open)}> {/* find way to make this more accessible? */}
                 {renderRichText(content.info, options)}
             </Button>
         </React.Fragment>

@@ -33,21 +33,18 @@ export const Header = ({ props }) => {
         <>
             <StyledHeader scrolled={!navInView ? true : false}>
                 <SkipLink href="#skip">Skip to main content</SkipLink>
-                <Navigation>
-                {/* no ul/li due to transition not working from stacking order */}
+                <Navigation> {/* no ul/li due to transition not working from stacking order */}
                     <Links scrolled={!navInView ? true : false}>
-                        <TransitionLink to="/" $delay={pathname === "/" ? 1.5 : 0.1}>home</TransitionLink>
-                        <TransitionLink to="/about" $delay={pathname === "/" ? 1.6 : 0.2}>about</TransitionLink>
-                        <TransitionLink to="/work" $delay={pathname === "/" ? 1.7 : 0.3}>work</TransitionLink>
-                        <TransitionLink to="/contact" $delay={pathname === "/" ? 1.8 : 0.4}>contact</TransitionLink>
+                        <TransitionLink to="/" delay={pathname === "/" ? 1.5 : 0.1}>home</TransitionLink>
+                        <TransitionLink to="/about" delay={pathname === "/" ? 1.6 : 0.2}>about</TransitionLink>
+                        <TransitionLink to="/work" delay={pathname === "/" ? 1.7 : 0.3}>work</TransitionLink>
+                        <TransitionLink to="/contact" delay={pathname === "/" ? 1.8 : 0.4}>contact</TransitionLink>
                     </Links>
                 </Navigation>
-                <Profile scrolled={!proInView ? true : false} src={`${profilePic?.file?.url}`} alt="me" />
+                <Profile scrolled={!proInView ? true : false} src={`${profilePic?.file?.url}`} alt="me" aria-hidden={true} />
             </StyledHeader>
-            {/* imitate an "on scroll" for the navigation */}
-            <div ref={navRef} />
-            {/* profile picture (split for home page) */}
-            <ProfileTrigger className={pathname === "/" ? "home" : null} ref={proRef} />
+            <div ref={navRef} /> {/* imitate an "on scroll" for the navigation */}
+            <ProfileTrigger className={pathname === "/" ? "home" : null} ref={proRef} /> {/* profile picture (split for home page) */}
         </>
     );
 };
@@ -69,9 +66,11 @@ const SkipLink = styled.a`
     top: -1000%;
 
     &:focus {
-        display: inline-block;
-        position: relative;
+        /* display: inline-block; */
+        /* position: relative; */
         top: 0;
+        left: 33%;
+        right: 33%;
         background-color: white;
         color: #2B194D;
         padding: 0.5em 2em;
@@ -98,13 +97,18 @@ const Navigation = styled.nav`
 const Links = styled.div`
     display: flex;
     width: ${props => props.scrolled ? "25%" : "100%"};
-    margin: ${props => props.scrolled ? "0.75em" : "0.9em"};
+    margin: ${props => props.scrolled ? "0.75em" : "0.9em 0em"};
     margin-left: auto;
     padding: 0;
     transition: all 0.25s ease;
 
     @media only screen and (max-width: 767px) {
         width: ${props => props.scrolled ? "50%" : "100%"};
+    };
+
+    @media only screen and (max-width: 414px) {
+        width: 100%;
+        margin-right: 0;
     };
 `;
 
@@ -115,6 +119,10 @@ const Profile = styled.img`
     transition: all 0.25s ease;
     padding: 0.65em;
     z-index: -1;
+
+    @media only screen and (max-width: 414px) {
+        display: none;
+    };
 `;
 
 const ProfileTrigger = styled.div`
@@ -127,8 +135,8 @@ const ProfileTrigger = styled.div`
         margin-left: -150px;
         width: 300px;
         height: 5px;
-        /* background-color: black; */
-        /* z-index: 999; */
+        /* background-color: black;
+        z-index: 999; */
 
         @media only screen and (max-width: 767px) {
             top: 45%;
