@@ -148,7 +148,11 @@ export default function IndexPage({ data }) {
                                             $delay={i * 0.2} 
                                         >
                                             <ImageContainer background={`${project?.preview?.thumbnail?.file?.url}`}>
-                                                <WorkImage image={project?.client?.logo ? getImage(project.client.logo) : getImage(project.client.logoColour)} alt="" loading="lazy" />
+                                                <WorkImage 
+                                                    image={project?.client?.logo ? getImage(project.client.logo) : getImage(project.client.logoColour)} 
+                                                    imgStyle={{width: "80%", height: "auto", margin: "auto"}}
+                                                    alt={project?.client?.name} 
+                                                />
                                             </ImageContainer>
                                         </WorkLink>
                                     </WorkItem>
@@ -165,7 +169,11 @@ export default function IndexPage({ data }) {
                             <SoftwareList ref={ref}>
                                 {software?.map((software) => (
                                     <Software $active={inView} key={software?.id}>
-                                        <SoftwareLogo image={getImage(software)} alt={software?.title} objectFit="contain" loading="lazy" />
+                                        <SoftwareLogo 
+                                            image={getImage(software)} 
+                                            alt={software?.title} 
+                                            objectFit="contain" 
+                                        />
                                     </Software>
                                 ))}
                             </SoftwareList>
@@ -304,7 +312,6 @@ const ImageContainer = styled.div`
 const WorkImage = styled(GatsbyImage)`
     opacity: 0;
     width: 100%;
-    /* transform: translate(0px, 73%); */
     height: 100%;
     transition: opacity 0.5s linear 0s;
     vertical-align: middle;
@@ -314,11 +321,11 @@ const WorkImage = styled(GatsbyImage)`
         opacity: 1;
     };
 
-    img {
+    /* img {
         width: 80%;
         height: auto;
         margin: auto;
-    };
+    }; */
 
     @media only screen and (max-width: 767px) {
         opacity: 1;
