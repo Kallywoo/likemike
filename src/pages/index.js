@@ -286,6 +286,11 @@ const WorkLink = styled(Link)`
     height: 100%;
     transform: translate3d(0,0,0) scale(0);
     ${props => props.$active ? Scale : null};
+
+    &:focus div { /* doesn't work when on their individual styles */
+        background-image: none;
+        opacity: 1;
+    };
 `;
 
 const ImageContainer = styled.div`
@@ -320,12 +325,6 @@ const WorkImage = styled(GatsbyImage)`
     &:hover {
         opacity: 1;
     };
-
-    /* img {
-        width: 80%;
-        height: auto;
-        margin: auto;
-    }; */
 
     @media only screen and (max-width: 767px) {
         opacity: 1;
