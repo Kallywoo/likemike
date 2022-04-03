@@ -96,6 +96,7 @@ const StyledLink = styled(Link)`
         opacity: 0;
         transition: opacity .3s, transform .3s;
         transform: translateY(10px);
+        pointer-events: none;
     };
 
     &:hover:after {

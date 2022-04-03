@@ -124,13 +124,15 @@ export default function WorkPage({ data }) {
                                         {project.description && renderRichText(project?.description, options)}
                                         <Site href={`http://${project?.link}`}>{project?.link}</Site>
                                     </Project>
-                                    <GatsbyImg 
-                                        $active={inView}
-                                        $dip={1} 
-                                        $delay={0.125} 
-                                        image={project?.preview?.preview?.gatsbyImageData} 
-                                        alt="" 
-                                    />
+                                    <PreviewContainer>
+                                        <GatsbyImg 
+                                            $active={inView}
+                                            $dip={1} 
+                                            $delay={0.125} 
+                                            image={project?.preview?.preview?.gatsbyImageData} 
+                                            alt="" 
+                                        />
+                                    </PreviewContainer>
                                 </ProjectContainer>
                             </Section>
                         )}
@@ -241,10 +243,13 @@ const GatsbyImg = styled(GatsbyImage)`
     opacity: 0;
     align-self: flex-start;
     margin-top: 3em;
-    width: 57.62%;
     animation-delay: 0.125s;
     ${props => props.$active ? FadeAndSlide : null};
-    
+`;
+
+const PreviewContainer = styled.div` /* annoyingly, GatsbyImage overwrites the media query on build when in GatsbyImg, so this div is to solve it */
+    width: 57.62%;
+
     @media only screen and (max-width: 767px) {
         display: none;
     };
