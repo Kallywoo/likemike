@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { graphql, useStaticQuery } from 'gatsby';
 import { useInView } from 'react-intersection-observer';
 import styled from 'styled-components';
@@ -27,7 +27,10 @@ export const Header = ({ props }) => {
 
     const { ref: proRef, inView: proInView } = useInView({
         threshold: 0,
+        initialInView: true
     });
+
+    const isMain = pathname === "/";
 
     return (
         <>
@@ -35,10 +38,10 @@ export const Header = ({ props }) => {
                 <SkipLink href="#skip">Skip to main content</SkipLink>
                 <Navigation> {/* no ul/li due to transition not working from stacking order */}
                     <Links scrolled={!navInView ? true : false}>
-                        <TransitionLink to="/" delay={pathname === "/" ? 1.5 : 0.1}>home</TransitionLink>
-                        <TransitionLink to="/about" delay={pathname === "/" ? 1.6 : 0.2}>about</TransitionLink>
-                        <TransitionLink to="/work" delay={pathname === "/" ? 1.7 : 0.3}>work</TransitionLink>
-                        <TransitionLink to="/contact" delay={pathname === "/" ? 1.8 : 0.4}>contact</TransitionLink>
+                        <TransitionLink to="/" delay={isMain ? 1.5 : 0.1}>home</TransitionLink>
+                        <TransitionLink to="/about" delay={isMain ? 1.6 : 0.2}>about</TransitionLink>
+                        <TransitionLink to="/work" delay={isMain ? 1.7 : 0.3}>work</TransitionLink>
+                        <TransitionLink to="/contact" delay={isMain ? 1.8 : 0.4}>contact</TransitionLink>
                     </Links>
                 </Navigation>
                 <Profile scrolled={!proInView ? true : false} src={`${profilePic?.file?.url}`} alt="me" aria-hidden={true} />
