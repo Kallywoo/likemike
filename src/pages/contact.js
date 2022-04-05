@@ -78,10 +78,47 @@ export default function ContactPage() {
             <Main>
                 <Section>
                     <H2 $duration={0.5} $delay={0.25}>Get in touch...</H2>
-                    <Form $duration={0.5} $delay={0.5} onSubmit={handleSubmit}>
-                        <Paragraph>Send me a message and I'll respond as soon as I can!</Paragraph>
-                        <Fieldset disabled={loading}>
-                            <Group>
+                    {!message ? 
+                        <Form $duration={0.5} $delay={0.5} onSubmit={handleSubmit}>
+                            <Paragraph>Send me a message and I'll respond as soon as I can!</Paragraph>
+                            <Fieldset disabled={loading}>
+                                <Group>
+                                    <Input 
+                                        name="name" 
+                                        type="text" 
+                                        value={values.name} 
+                                        onChange={handleInputChange} 
+                                        required
+                                    />
+                                    <Label htmlFor="name">Name</Label>
+                                    <Highlight />
+                                    <Bar />
+                                </Group>
+                                <Group>
+                                    <Input 
+                                        name="email" 
+                                        type="text" 
+                                        value={values.email} 
+                                        onChange={handleInputChange} 
+                                        required
+                                    />
+                                    <Label htmlFor="email">Email</Label>
+                                    <Highlight />
+                                    <Bar />
+                                </Group>
+                                <Group>
+                                    <Input 
+                                        as="textarea"
+                                        name="message" 
+                                        type="message" 
+                                        value={values.message} 
+                                        onChange={handleInputChange} 
+                                        required
+                                    />
+                                    <Label htmlFor="message">Message</Label>
+                                    <Highlight />
+                                    <Bar />
+                                </Group>
                                 <Input 
                                     id="name"
                                     name="name" 
