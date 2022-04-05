@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { renderRichText } from 'gatsby-source-contentful/rich-text';
 import { BLOCKS } from '@contentful/rich-text-types';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 export const ExpandInfo = ({ content }) => {
 
@@ -16,12 +16,26 @@ export const ExpandInfo = ({ content }) => {
     return (
         <React.Fragment key={content.id}>
             <H3>{content.title}</H3>
-            <Button className={open ? "open" : null} onClick={() => setOpen(!open)}> {/* find way to make this more accessible? */}
-                {renderRichText(content.info, options)}
+            <Button 
+                onClick={() => setOpen(!open)} 
+                className={open ? "open" : null} 
+                aria-label={!open ? `Find out more about my ${content.title} experience` : `Close ${content.title} information`}
+            >
+                {open && renderRichText(content.info, options)}
             </Button>
+            <A11y aria-live="polite">{open && renderRichText(content.info, options)}</A11y>
         </React.Fragment>
     );
 };
+
+const A11y = styled.div`
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+`;
 
 const H3 = styled.h3`
     margin: 0.75rem;
@@ -29,29 +43,29 @@ const H3 = styled.h3`
 
 const Button = styled.button`
     position: relative;
-	/* display: block; */
-	border-radius: 16px;
-	height: 32px;
-	width: 32px;
-	background: #aceef7;
-	color: #2B194D;
-	margin: .25em auto;
-	box-shadow: 2px 2px 5px #060410;
-	line-height: 18px;
-	cursor: pointer;
-	transition: all .2s ease-out;
+    border-radius: 16px;
+    height: 32px;
+    width: 32px;
+    background: #aceef7;
+    color: #2B194D;
+    margin: .25em auto;
+    box-shadow: 2px 2px 5px #060410;
+    line-height: 18px;
+    cursor: pointer;
+    transition: all .2s ease-out;
     padding: 0;
     overflow: hidden;
     border-style: none;
   
     &:before {
+        /* bit low in firefox.. find way to make it look nicer? */
         position: absolute;
-        font-size: 40px;
         margin-left: 0;
-        left: 50%;
-        transform: translateX(-50%);
         top: 7px;
+        left: 50%;
         opacity: 1;
+        font-size: 2.5em;
+        transform: translateX(-50%);
         transition: all .75s ease-out;
         content: "+";
     };
@@ -67,7 +81,6 @@ const Button = styled.button`
         width: 300px;
         line-height: 30px;
         transition: all .2s ease-out;
-        overflow: initial;
 
         :hover {
             transform: scale(1);
@@ -78,22 +91,20 @@ const Button = styled.button`
             opacity: 0;
             transition: all .2s ease-out;
         };
-
-        p {
-            padding: 1rem;
-            opacity: 1;
-            transition: all .7s ease-in
-        };
     };
 `;
 
+const fadeIn = keyframes`
+    0% { opacity: 0; transform: translate(-5px, -5px); };
+    100% { opacity: 1; transform: translate(0, 0); };
+`;
+
 const Description = styled.p`
-    /* height: 0; */
     font-family: "Open Sans";
-	font-size: 1.4em;
-	font-weight: 400;
-	line-height: 28px;
-	padding: .65em;
-	text-align: left;
-	opacity: 0;
+    font-size: 1.4em;
+    font-weight: 400;
+    line-height: 28px;
+    text-align: left;
+    padding: 1rem;
+    animation: ${fadeIn} .7s ease-in forwards;
 `;

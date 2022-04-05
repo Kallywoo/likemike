@@ -120,30 +120,65 @@ export default function ContactPage() {
                                     <Bar />
                                 </Group>
                                 <Input 
-                                    name="boop"
-                                    type="boop"
-                                    value={values.boop}
-                                    onChange={handleInputChange}
-                                    className="boop"
+                                    id="name"
+                                    name="name" 
+                                    type="text" 
+                                    value={values.name} 
+                                    onChange={handleInputChange} 
+                                    required
                                 />
-                                <Button type="submit" disabled={loading}>Send!</Button>
-                                {loading ? 
-                                    <LoadingContainer>
-                                        <Loading>
-                                            <Spinner />
-                                        </Loading>
-                                    </LoadingContainer>
-                                : null}
-                            </Fieldset>
-                        </Form>
-                    : 
-                        <ResponseContainer>
-                            <div aria-live="polite" role="status">
-                                {message ? <p>{message}</p> : ''}
-                            </div>
-                        </ResponseContainer>
-                    }
+                                <Label htmlFor="name">Name</Label>
+                                <Highlight />
+                                <Bar />
+                            </Group>
+                            <Group>
+                                <Input 
+                                    id="email"
+                                    name="email" 
+                                    type="text" 
+                                    value={values.email} 
+                                    onChange={handleInputChange} 
+                                    required
+                                />
+                                <Label htmlFor="email">Email</Label>
+                                <Highlight />
+                                <Bar />
+                            </Group>
+                            <Group>
+                                <Input 
+                                    as="textarea"
+                                    id="message"
+                                    name="message" 
+                                    type="message" 
+                                    value={values.message} 
+                                    onChange={handleInputChange} 
+                                    required
+                                />
+                                <Label htmlFor="message">Message</Label>
+                                <Highlight />
+                                <Bar />
+                            </Group>
+                            <Input 
+                                name="boop"
+                                type="boop"
+                                value={values.boop}
+                                onChange={handleInputChange}
+                                className="boop"
+                            />
+                            <Button type="submit" disabled={loading} aria-label={loading ? "Loading" : "Send"}>Send!</Button>
+                            {loading ? 
+                                <LoadingContainer>
+                                    <Loading>
+                                        <Spinner />
+                                    </Loading>
+                                </LoadingContainer>
+                            : null}
+                        </Fieldset>
+                    </Form>
                     <ResponseContainer>
+                        <div aria-live="polite" role="status">
+                            {message ? <p>{message}</p> : ''}
+                        </div>
                         <div aria-live="assertive">
                             {error ? <RedError>Error: {error}</RedError> : ''}
                         </div>

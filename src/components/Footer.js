@@ -45,21 +45,21 @@ export const Footer = ({ props }) => {
                             {contact?.instagram &&
                                 <SocialItem>
                                     <a href={`https://instagram.com/${contact.instagram}`} aria-label="Instagram">
-                                        <SocialIcon src={instagram} alt="" />
+                                        <SocialIcon src={instagram} alt="Instagram" />
                                     </a>
                                 </SocialItem>
                             }
                             {contact?.twitter &&
                                 <SocialItem>
                                     <a href={`https://twitter.com/${contact.twitter}`} aria-label="Twitter">
-                                        <SocialIcon src={twitter} alt="" />
+                                        <SocialIcon src={twitter} alt="Twitter" />
                                     </a>
                                 </SocialItem>
                             }
                             {contact?.linkedIn &&
                                 <SocialItem>
                                     <a href={`https://uk.linkedin.com/pub/${contact.linkedIn}`} aria-label="LinkedIn">
-                                        <SocialIcon src={linkedin} alt="" />
+                                        <SocialIcon src={linkedin} alt="LinkedIn" />
                                     </a>
                                 </SocialItem>
                             }
