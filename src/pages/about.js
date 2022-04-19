@@ -40,8 +40,8 @@ export default function AboutPage({ data }) {
 
     const options = {
         renderNode: {
-          [BLOCKS.PARAGRAPH]: (node, children) => <Paragraph $duration={0.5} $delay={0.5}>{children}</Paragraph>,
-          [INLINES.ASSET_HYPERLINK]: (node, children) => <a href={node.data.target.file.url}>{children}</a>
+            [BLOCKS.PARAGRAPH]: (node, children) => <Paragraph $duration={0.5} $delay={0.5}>{children}</Paragraph>,
+            [INLINES.ASSET_HYPERLINK]: (node, children) => <a href={node.data.target.file.url}>{children}</a>
         }
     };
 

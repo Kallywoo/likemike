@@ -42,18 +42,15 @@ export default function ContactPage() {
 
         // console.log(body);
 
-        // const res = await fetch(`${process.env.API_ENDPOINT}`, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(body),
-        // });
+        const res = await fetch(`${process.env.API_ENDPOINT}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+        });
 
-        // const text = JSON.parse(await res.text());
-
-        const res = {status: 401};
-        const text = 'error!';
+        const text = JSON.parse(await res.text());
 
         if (res.status >= 400 && res.status < 600) {
             setLoading(false);

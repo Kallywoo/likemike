@@ -15,9 +15,7 @@ import filler from '../images/amends/9.jpg';
 export const data = graphql`
     query {
         profilePic: contentfulAsset(contentful_id: {eq: "6z4EKuoA7WjfxmJpPeZNbN"}) {
-            file {
-                url
-            }
+            gatsbyImageData(placeholder: TRACED_SVG, width: 320)
         }
         # find way to make this less repetitive?..
         header: contentfulTitle(contentful_id: {eq: "1WS3lEghvb0lRJ5lDWsf8"}) {
@@ -66,9 +64,7 @@ export const data = graphql`
                 title
                 preview {
                     thumbnail {
-                        file {
-                            url
-                        }
+                        gatsbyImageData(height: 400, width: 200, resizingBehavior: FILL, cropFocus: TOP_LEFT)
                     }
                 }
                 indexOrder
@@ -78,7 +74,7 @@ export const data = graphql`
             software: softwareCollection {
                 id
                 title
-                gatsbyImageData(placeholder: BLURRED, height: 75)
+                gatsbyImageData(placeholder: TRACED_SVG, height: 75)
             }
         }
     }
@@ -99,7 +95,7 @@ export default function IndexPage({ data }) {
             <main>
                 <Intro>
                     <ProfileImageContainer>
-                        <Profile src={`${profilePic?.file?.url}`} alt="me" width="320" height="320" />
+                        <Profile image={profilePic?.gatsbyImageData} alt="me" loading="eager" />
                     </ProfileImageContainer>
                     <H1 $duration={1} $delay={1.5}>{header.title}</H1>
                 </Intro>
@@ -147,10 +143,15 @@ export default function IndexPage({ data }) {
                                             $active={inView} 
                                             $delay={i * 0.2} 
                                         >
-                                            <ImageContainer background={`${project?.preview?.thumbnail?.file?.url}`}>
+                                            <ImageContainer>
+                                                <WorkImageBackground 
+                                                    image={project?.preview?.thumbnail?.gatsbyImageData} 
+                                                    imgStyle={{objectPosition: "0 0"}}
+                                                    alt=""
+                                                />
                                                 <WorkImage 
                                                     image={project?.client?.logo ? getImage(project.client.logo) : getImage(project.client.logoColour)} 
-                                                    imgStyle={{width: "80%", height: "auto", margin: "auto"}}
+                                                    imgStyle={{width: "80%", height: "auto", margin: "auto"}} // inline as this breaks on build in styled components
                                                     alt={project?.client?.name} 
                                                 />
                                             </ImageContainer>
@@ -253,7 +254,7 @@ const ProfileImageContainer = styled.div`
     };
 `;
 
-const Profile = styled.img`
+const Profile = styled(GatsbyImage)`
     width: 100%;
     height: auto;
 `;
@@ -295,22 +296,35 @@ const WorkLink = styled(Link)`
 
 const ImageContainer = styled.div`
     background-color: #2b194d;
-    display: inline-block;
+    display: inline-grid;
     width: 200px;
     height: 200px;
     border: 6px solid #2b194d;
     border-radius: 100%;
     overflow: hidden;
-    background-image: url(${props => props.background});
+    clip-path: circle(50%);
+
+    @media only screen and (max-width: 767px) {
+        width: 175px;
+        height: 175px;
+    };
+`;
+
+const WorkImageBackground = styled(GatsbyImage)`
+    grid-area: 1/1;
 
     &:hover {
-        background-image: none;
+        opacity: 0;
+    };
+
+    // WorkImage blocks the hover state, so pointer-events on that has been turned off and its hover state is now controlled here via adjacent divs
+
+    &:hover + div {
+        opacity: 1;
     };
 
     @media only screen and (max-width: 767px) {
-        background-image: none;
-        width: 175px;
-        height: 175px;
+        opacity: 0;
     };
 `;
 
@@ -320,11 +334,8 @@ const WorkImage = styled(GatsbyImage)`
     height: 100%;
     transition: opacity 0.5s linear 0s;
     vertical-align: middle;
-    clip-path: circle(54%);
-
-    &:hover {
-        opacity: 1;
-    };
+    grid-area: 1/1;
+    pointer-events: none;
 
     @media only screen and (max-width: 767px) {
         opacity: 1;
