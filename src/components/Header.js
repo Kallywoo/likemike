@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { graphql, useStaticQuery } from 'gatsby';
+import { GatsbyImage } from 'gatsby-plugin-image';
 import { useInView } from 'react-intersection-observer';
 import styled from 'styled-components';
 
@@ -12,9 +13,7 @@ export const Header = ({ props }) => {
     const data = useStaticQuery(graphql`
         query {
             profilePic: contentfulAsset(contentful_id: {eq: "6z4EKuoA7WjfxmJpPeZNbN"}) {
-                file {
-                    url
-                }
+                gatsbyImageData(placeholder: BLURRED, width: 60)
             }
         }
     `);
@@ -44,7 +43,9 @@ export const Header = ({ props }) => {
                         <TransitionLink to="/contact" delay={isMain ? 1.8 : 0.4}>contact</TransitionLink>
                     </Links>
                 </Navigation>
-                <Profile scrolled={!proInView ? true : false} src={`${profilePic?.file?.url}`} alt="me" aria-hidden={true} />
+                <ProfileContainer scrolled={!proInView ? true : false}>
+                    <GatsbyImage image={profilePic?.gatsbyImageData} alt="me" aria-hidden={true} />
+                </ProfileContainer>
             </StyledHeader>
             <div ref={navRef} /> {/* imitate an "on scroll" for the navigation */}
             <ProfileTrigger className={pathname === "/" ? "home" : null} ref={proRef} /> {/* profile picture (split for home page) */}
@@ -115,7 +116,7 @@ const Links = styled.div`
     };
 `;
 
-const Profile = styled.img`
+const ProfileContainer = styled.div`
     position: absolute;
     width: 60px;
     top: ${props => props.scrolled ? "0px" : "-100px"};

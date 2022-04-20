@@ -95,7 +95,7 @@ const Button = styled.button`
 `;
 
 const fadeIn = keyframes`
-    0% { opacity: 0; transform: translate(-5px, -5px); };
+    0% { opacity: 0; transform: translate(-1.2%, -1.2%); };
     100% { opacity: 1; transform: translate(0, 0); };
 `;
 

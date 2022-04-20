@@ -42,18 +42,15 @@ export default function ContactPage() {
 
         // console.log(body);
 
-        // const res = await fetch(`${process.env.API_ENDPOINT}`, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(body),
-        // });
+        const res = await fetch(`${process.env.API_ENDPOINT}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+        });
 
-        // const text = JSON.parse(await res.text());
-
-        const res = {status: 401};
-        const text = 'error!';
+        const text = JSON.parse(await res.text());
 
         if (res.status >= 400 && res.status < 600) {
             setLoading(false);
@@ -78,57 +75,57 @@ export default function ContactPage() {
             <Main>
                 <Section>
                     <H2 $duration={0.5} $delay={0.25}>Get in touch...</H2>
-					<Form $duration={0.5} $delay={0.5} onSubmit={handleSubmit}>
-						<Paragraph>Send me a message and I'll respond as soon as I can!</Paragraph>
-						<Fieldset disabled={loading}>
-							<Group>
-								<Input 
-									id="name"
-									name="name" 
-									type="text" 
-									value={values.name} 
-									onChange={handleInputChange} 
-									required
-								/>
-								<Label htmlFor="name">Name</Label>
-								<Highlight />
-								<Bar />
-							</Group>
-							<Group>
-								<Input 
-									id="email"
-									name="email" 
-									type="text" 
-									value={values.email} 
-									onChange={handleInputChange} 
-									required
-								/>
-								<Label htmlFor="email">Email</Label>
-								<Highlight />
-								<Bar />
-							</Group>
-							<Group>
-								<Input 
-									as="textarea"
-									id="message"
-									name="message" 
-									type="message" 
-									value={values.message} 
-									onChange={handleInputChange} 
-									required
-								/>
-								<Label htmlFor="message">Message</Label>
-								<Highlight />
-								<Bar />
-							</Group>
-							<Input 
-								name="boop"
-								type="boop"
-								value={values.boop}
-								onChange={handleInputChange}
-								className="boop"
-							/>
-							<Button type="submit" disabled={loading} aria-label={loading ? "Loading" : "Send"}>Send!</Button>
+                    <Form $duration={0.5} $delay={0.5} onSubmit={handleSubmit}>
+                        <Paragraph>Send me a message and I'll respond as soon as I can!</Paragraph>
+                        <Fieldset disabled={loading}>
+                            <Group>
+                                <Input 
+                                    id="name"
+                                    name="name" 
+                                    type="text" 
+                                    value={values.name} 
+                                    onChange={handleInputChange} 
+                                    required
+                                />
+                                <Label htmlFor="name">Name</Label>
+                                <Highlight />
+                                <Bar />
+                            </Group>
+                            <Group>
+                                <Input 
+                                    id="email"
+                                    name="email" 
+                                    type="text" 
+                                    value={values.email} 
+                                    onChange={handleInputChange} 
+                                    required
+                                />
+                                <Label htmlFor="email">Email</Label>
+                                <Highlight />
+                                <Bar />
+                            </Group>
+                            <Group>
+                                <Input 
+                                    as="textarea"
+                                    id="message"
+                                    name="message" 
+                                    type="message" 
+                                    value={values.message} 
+                                    onChange={handleInputChange} 
+                                    required
+                                />
+                                <Label htmlFor="message">Message</Label>
+                                <Highlight />
+                                <Bar />
+                            </Group>
+                            <Input 
+                                name="boop"
+                                type="boop"
+                                value={values.boop}
+                                onChange={handleInputChange}
+                                className="boop"
+                            />
+                            <Button type="submit" disabled={loading} aria-label={loading ? "Loading" : "Send"}>Send!</Button>
                             {loading ? 
                                 <LoadingContainer>
                                     <Loading>
