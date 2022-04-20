@@ -43,16 +43,16 @@ const H3 = styled.h3`
 
 const Button = styled.button`
     position: relative;
-	border-radius: 16px;
-	height: 32px;
-	width: 32px;
-	background: #aceef7;
-	color: #2B194D;
-	margin: .25em auto;
-	box-shadow: 2px 2px 5px #060410;
-	line-height: 18px;
-	cursor: pointer;
-	transition: all .2s ease-out;
+    border-radius: 16px;
+    height: 32px;
+    width: 32px;
+    background: #aceef7;
+    color: #2B194D;
+    margin: .25em auto;
+    box-shadow: 2px 2px 5px #060410;
+    line-height: 18px;
+    cursor: pointer;
+    transition: all .2s ease-out;
     padding: 0;
     overflow: hidden;
     border-style: none;
@@ -101,10 +101,10 @@ const fadeIn = keyframes`
 
 const Description = styled.p`
     font-family: "Open Sans";
-	font-size: 1.4em;
-	font-weight: 400;
-	line-height: 28px;
-	text-align: left;
-	padding: 1rem;
+    font-size: 1.4em;
+    font-weight: 400;
+    line-height: 28px;
+    text-align: left;
+    padding: 1rem;
     animation: ${fadeIn} .7s ease-in forwards;
 `;
