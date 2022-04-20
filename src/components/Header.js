@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { graphql, useStaticQuery } from 'gatsby';
+import { GatsbyImage } from 'gatsby-plugin-image';
 import { useInView } from 'react-intersection-observer';
 import styled from 'styled-components';
 
@@ -12,9 +13,7 @@ export const Header = ({ props }) => {
     const data = useStaticQuery(graphql`
         query {
             profilePic: contentfulAsset(contentful_id: {eq: "6z4EKuoA7WjfxmJpPeZNbN"}) {
-                file {
-                    url
-                }
+                gatsbyImageData(placeholder: BLURRED, width: 60)
             }
         }
     `);
@@ -27,27 +26,29 @@ export const Header = ({ props }) => {
 
     const { ref: proRef, inView: proInView } = useInView({
         threshold: 0,
+        initialInView: true
     });
+
+    const isMain = pathname === "/";
 
     return (
         <>
             <StyledHeader scrolled={!navInView ? true : false}>
                 <SkipLink href="#skip">Skip to main content</SkipLink>
-                <Navigation>
-                {/* no ul/li due to transition not working from stacking order */}
+                <Navigation> {/* no ul/li due to transition not working from stacking order */}
                     <Links scrolled={!navInView ? true : false}>
-                        <TransitionLink to="/" $delay={pathname === "/" ? 1.5 : 0.1}>home</TransitionLink>
-                        <TransitionLink to="/about" $delay={pathname === "/" ? 1.6 : 0.2}>about</TransitionLink>
-                        <TransitionLink to="/work" $delay={pathname === "/" ? 1.7 : 0.3}>work</TransitionLink>
-                        <TransitionLink to="/contact" $delay={pathname === "/" ? 1.8 : 0.4}>contact</TransitionLink>
+                        <TransitionLink to="/" delay={isMain ? 1.5 : 0.1}>home</TransitionLink>
+                        <TransitionLink to="/about" delay={isMain ? 1.6 : 0.2}>about</TransitionLink>
+                        <TransitionLink to="/work" delay={isMain ? 1.7 : 0.3}>work</TransitionLink>
+                        <TransitionLink to="/contact" delay={isMain ? 1.8 : 0.4}>contact</TransitionLink>
                     </Links>
                 </Navigation>
-                <Profile scrolled={!proInView ? true : false} src={`${profilePic?.file?.url}`} alt="me" />
+                <ProfileContainer scrolled={!proInView ? true : false}>
+                    <GatsbyImage image={profilePic?.gatsbyImageData} alt="me" aria-hidden={true} />
+                </ProfileContainer>
             </StyledHeader>
-            {/* imitate an "on scroll" for the navigation */}
-            <div ref={navRef} />
-            {/* profile picture (split for home page) */}
-            <ProfileTrigger className={pathname === "/" ? "home" : null} ref={proRef} />
+            <div ref={navRef} /> {/* imitate an "on scroll" for the navigation */}
+            <ProfileTrigger className={pathname === "/" ? "home" : null} ref={proRef} /> {/* profile picture (split for home page) */}
         </>
     );
 };
@@ -69,9 +70,11 @@ const SkipLink = styled.a`
     top: -1000%;
 
     &:focus {
-        display: inline-block;
-        position: relative;
+        /* display: inline-block; */
+        /* position: relative; */
         top: 0;
+        left: 33%;
+        right: 33%;
         background-color: white;
         color: #2B194D;
         padding: 0.5em 2em;
@@ -98,7 +101,7 @@ const Navigation = styled.nav`
 const Links = styled.div`
     display: flex;
     width: ${props => props.scrolled ? "25%" : "100%"};
-    margin: ${props => props.scrolled ? "0.75em" : "0.9em"};
+    margin: ${props => props.scrolled ? "0.75em" : "0.9em 0em"};
     margin-left: auto;
     padding: 0;
     transition: all 0.25s ease;
@@ -106,15 +109,24 @@ const Links = styled.div`
     @media only screen and (max-width: 767px) {
         width: ${props => props.scrolled ? "50%" : "100%"};
     };
+
+    @media only screen and (max-width: 414px) {
+        width: 100%;
+        margin-right: 0;
+    };
 `;
 
-const Profile = styled.img`
+const ProfileContainer = styled.div`
     position: absolute;
     width: 60px;
     top: ${props => props.scrolled ? "0px" : "-100px"};
     transition: all 0.25s ease;
     padding: 0.65em;
     z-index: -1;
+
+    @media only screen and (max-width: 414px) {
+        display: none;
+    };
 `;
 
 const ProfileTrigger = styled.div`
@@ -127,8 +139,8 @@ const ProfileTrigger = styled.div`
         margin-left: -150px;
         width: 300px;
         height: 5px;
-        /* background-color: black; */
-        /* z-index: 999; */
+        /* background-color: black;
+        z-index: 999; */
 
         @media only screen and (max-width: 767px) {
             top: 45%;

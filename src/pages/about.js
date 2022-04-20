@@ -1,6 +1,6 @@
 import * as React from "react"
 import { graphql } from 'gatsby';
-import { BLOCKS } from '@contentful/rich-text-types';
+import { BLOCKS, INLINES } from '@contentful/rich-text-types';
 import { renderRichText } from 'gatsby-source-contentful/rich-text';
 import styled from 'styled-components';
 import SEO from '../components/SEO';
@@ -14,6 +14,15 @@ export const data = graphql`
             title
             description: paragraph {
                 raw
+                references {
+                    ... on ContentfulAsset {
+                        __typename
+                        contentful_id
+                        file {
+                            url
+                        }
+                    }
+                }
             }
         }
         skills: contentfulTitleAndParagraph(contentful_id: {eq: "1yx6zeKWyzVjT6oHpEcmxj"}) {
@@ -31,7 +40,8 @@ export default function AboutPage({ data }) {
 
     const options = {
         renderNode: {
-          [BLOCKS.PARAGRAPH]: (node, children) => <Paragraph duration={0.5} delay={0.5}>{children}</Paragraph>
+            [BLOCKS.PARAGRAPH]: (node, children) => <Paragraph $duration={0.5} $delay={0.5}>{children}</Paragraph>,
+            [INLINES.ASSET_HYPERLINK]: (node, children) => <a href={node.data.target.file.url}>{children}</a>
         }
     };
 
@@ -42,7 +52,7 @@ export default function AboutPage({ data }) {
                 <Section>
                     <H2 $duration={0.5} $delay={0.25}>{intro.title}</H2>
                     {renderRichText(intro.description, options)}
-                    <H2 $duration={0.5} $delay={0.25}>{skills.title}</H2>
+                    <H2 $duration={0.5} $delay={0.25} aria-label="My Skills">{skills.title}</H2>
                     {renderRichText(skills.description, options)}
                 </Section>
                 <Filler />
@@ -61,10 +71,10 @@ const Main = styled.main`
 
 const Section = styled.section`
     padding-top: 4em;
-    padding-bottom: 4rem;
+    padding-bottom: 4em;
 
     @media only screen and (max-width: 767px) {
-        padding-bottom: 0;
+        padding-bottom: 2em;
         margin: 0 2em;
     };
 

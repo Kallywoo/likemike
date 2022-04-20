@@ -6,8 +6,8 @@ import { renderRichText } from 'gatsby-source-contentful/rich-text';
 import { GatsbyImage, getImage } from 'gatsby-plugin-image';
 import { InView } from 'react-intersection-observer';
 import styled from 'styled-components';
-import SEO from '../components/SEO';
 
+import SEO from '../components/SEO';
 import { Fade, FadeAndSlide } from "../components/styles/Animations";
 
 export const data = graphql`
@@ -62,28 +62,24 @@ export default function WorkPage({ data }) {
 
     const options = {
         renderNode: {
-          [BLOCKS.PARAGRAPH]: (node, children) => <Description>{children}</Description>,
-          [INLINES.HYPERLINK]: ({ data }, children) => <Site href={data.uri}>{children}</Site>
+            [BLOCKS.PARAGRAPH]: (node, children) => <Description>{children}</Description>,
+            [INLINES.HYPERLINK]: ({ data }, children) => <Site href={data.uri}>{children}</Site>
         }
     };
 
     // alternative to this would just be swap out img content via CSS, but doesn't work with GatsbyImage so JS workaround it is!:
 
     useEffect(() => { // gets every other project from the end up (so "first" is always purple)
-        const arr = projects;
-        arr.reverse();
-        let newArr = arr.filter((element, index) => {
-            return index % 2 === 1;
+        setOdd(() => {
+            return projects.reverse()
+            .filter((_, index) => index % 2 === 1)
+            .reverse();
         });
-        newArr.reverse();
-        setOdd(newArr);
     }, [projects]);
 
     const swapLogo = (id) => { // if id matched during projects.map (white background), swaps logo to coloured
-        for(let i = 0; i < odd.length; i++) {
-            if (odd[i].id === id) {
-                return true;
-            };
+        if (odd.find(project => project.id === id)) {
+            return true;
         };
     };
 
@@ -121,16 +117,18 @@ export default function WorkPage({ data }) {
                                             />
                                         </LogoContainer>
                                         <Title>{project?.title}</Title>
-                                        {project.description && renderRichText(project.description, options)}
+                                        {project.description && renderRichText(project?.description, options)}
                                         <Site href={`http://${project?.link}`}>{project?.link}</Site>
                                     </Project>
-                                    <GatsbyImg 
-                                        $active={inView}
-                                        $dip={1} 
-                                        $delay={0.125} 
-                                        image={project?.preview?.preview?.gatsbyImageData} 
-                                        alt="" 
-                                    />
+                                    <PreviewContainer>
+                                        <GatsbyImg 
+                                            $active={inView}
+                                            $dip={1} 
+                                            $delay={0.125} 
+                                            image={project?.preview?.preview?.gatsbyImageData} 
+                                            alt="" 
+                                        />
+                                    </PreviewContainer>
                                 </ProjectContainer>
                             </Section>
                         )}
@@ -241,10 +239,13 @@ const GatsbyImg = styled(GatsbyImage)`
     opacity: 0;
     align-self: flex-start;
     margin-top: 3em;
-    width: 57.62%;
     animation-delay: 0.125s;
     ${props => props.$active ? FadeAndSlide : null};
-    
+`;
+
+const PreviewContainer = styled.div` /* annoyingly, GatsbyImage overwrites the media query on build when in GatsbyImg, so this div is to solve it */
+    width: 57.62%;
+
     @media only screen and (max-width: 767px) {
         display: none;
     };

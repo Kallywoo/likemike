@@ -15,9 +15,7 @@ import filler from '../images/amends/9.jpg';
 export const data = graphql`
     query {
         profilePic: contentfulAsset(contentful_id: {eq: "6z4EKuoA7WjfxmJpPeZNbN"}) {
-            file {
-                url
-            }
+            gatsbyImageData(placeholder: TRACED_SVG, width: 320)
         }
         # find way to make this less repetitive?..
         header: contentfulTitle(contentful_id: {eq: "1WS3lEghvb0lRJ5lDWsf8"}) {
@@ -66,9 +64,7 @@ export const data = graphql`
                 title
                 preview {
                     thumbnail {
-                        file {
-                            url
-                        }
+                        gatsbyImageData(height: 400, width: 200, resizingBehavior: FILL, cropFocus: TOP_LEFT)
                     }
                 }
                 indexOrder
@@ -78,7 +74,7 @@ export const data = graphql`
             software: softwareCollection {
                 id
                 title
-                gatsbyImageData(placeholder: BLURRED, height: 75)
+                gatsbyImageData(placeholder: TRACED_SVG, height: 75)
             }
         }
     }
@@ -95,84 +91,97 @@ export default function IndexPage({ data }) {
 
     return (
         <>
-        <SEO title="Home" />
-        <main>
-            <Intro>
-                <ProfileImageContainer>
-                    <Profile src={`${profilePic?.file?.url}`} alt="me" />
-                </ProfileImageContainer>
-                <H1 $duration={1} $delay={1.5}>{header.title}</H1>
-            </Intro>
-            {/* Skills */}
-            <InView threshold={1} triggerOnce={true}>
-                {({ inView, ref }) => (
-                    <Section className="purple">
-                        <h2>{skills.title}</h2>
-                        <List ref={ref}>
-                            <ListItem>
-                                <DrawSkills skill="code" active={inView} />
-                                <FadeContainer $active={inView} duration={2}>
-                                    <ExpandInfo content={code} />
-                                </FadeContainer>
-                            </ListItem>
-                            <ListItem>
-                                <DrawSkills skill="sketch" active={inView} />
-                                <FadeContainer $active={inView} duration={2}>
-                                    <ExpandInfo content={sketch} />
-                                </FadeContainer>
-                            </ListItem>
-                            <ListItem>
-                                <DrawSkills skill="ux" active={inView} />
-                                <FadeContainer $active={inView} duration={2}>
-                                    <ExpandInfo content={ux} />
-                                </FadeContainer>
-                            </ListItem>
-                        </List>
-                    </Section>
-                )}
-            </InView>
-            {/* Blank */}
-            <Filler/>
-            {/* Projects */}
-            <InView threshold={0.3} triggerOnce={true}>
-                {({ inView, ref }) => (
-                    <WorkSection>
-                        <H2 aria-label="Projects I've worked on for clients">{clients.title}</H2>
-                        <WorkList ref={ref}>
-                            {projects?.map((project, i) => (
-                                <WorkItem key={project?.id}>
-                                    <WorkLink 
-                                    to={`/work#${project?.slug}`} 
-                                    aria-label={`Redirect to ${project?.title} for ${project?.client.name}`}
-                                    $active={inView} 
-                                    $delay={i * 0.2} 
-                                    >
-                                        <ImageContainer img={`${project?.preview?.thumbnail?.file?.url}`}>
-                                            <WorkImage image={project?.client?.logo ? getImage(project.client.logo) : getImage(project.client.logoColour)} alt="" />
-                                        </ImageContainer>
-                                    </WorkLink>
-                                </WorkItem>
-                            ))}
-                        </WorkList>
-                    </WorkSection>
-                )}
-            </InView>
-            {/* Software */}
-            <InView threshold={0.3} triggerOnce={true}>
-                {({ inView, ref }) => (
-                    <SoftwareSection className="purple">
-                        <H2 aria-label="Software I've used">{softwareInfo.title}</H2>
-                        <SoftwareList ref={ref}>
-                            {software?.map((software) => (
-                                <Software $active={inView} key={software.id}>
-                                    <SoftwareLogo image={getImage(software)} alt={software.title} objectFit="contain" />
-                                </Software>
-                            ))}
-                        </SoftwareList>
-                    </SoftwareSection>
-                )}
-            </InView>
-        </main>
+            <SEO title="Home" />
+            <main>
+                <Intro>
+                    <ProfileImageContainer>
+                        <Profile image={profilePic?.gatsbyImageData} alt="me" loading="eager" />
+                    </ProfileImageContainer>
+                    <H1 $duration={1} $delay={1.5}>{header.title}</H1>
+                </Intro>
+                {/* Skills */}
+                <InView threshold={1} triggerOnce={true}>
+                    {({ inView, ref }) => (
+                        <Section className="purple">
+                            <h2>{skills.title}</h2>
+                            <List ref={ref}>
+                                <ListItem>
+                                    <DrawSkills skill="code" active={inView} />
+                                    <FadeContainer $active={inView} duration={2}>
+                                        <ExpandInfo content={code} />
+                                    </FadeContainer>
+                                </ListItem>
+                                <ListItem>
+                                    <DrawSkills skill="sketch" active={inView} />
+                                    <FadeContainer $active={inView} duration={2}>
+                                        <ExpandInfo content={sketch} />
+                                    </FadeContainer>
+                                </ListItem>
+                                <ListItem>
+                                    <DrawSkills skill="ux" active={inView} />
+                                    <FadeContainer $active={inView} duration={2}>
+                                        <ExpandInfo content={ux} />
+                                    </FadeContainer>
+                                </ListItem>
+                            </List>
+                        </Section>
+                    )}
+                </InView>
+                {/* Blank */}
+                <Filler/>
+                {/* Projects */}
+                <InView threshold={0.3} triggerOnce={true}>
+                    {({ inView, ref }) => (
+                        <WorkSection>
+                            <H2 aria-label="Projects I've worked on for clients">{clients.title}</H2>
+                            <WorkList ref={ref}>
+                                {projects?.map((project, i) => (
+                                    <WorkItem key={project?.id}>
+                                        <WorkLink 
+                                            to={`/work#${project?.slug}`} 
+                                            aria-label={`${project?.title} for ${project?.client?.name}`}
+                                            $active={inView} 
+                                            $delay={i * 0.2} 
+                                        >
+                                            <ImageContainer>
+                                                <WorkImageBackground 
+                                                    image={project?.preview?.thumbnail?.gatsbyImageData} 
+                                                    imgStyle={{objectPosition: "0 0"}}
+                                                    alt=""
+                                                />
+                                                <WorkImage 
+                                                    image={project?.client?.logo ? getImage(project.client.logo) : getImage(project.client.logoColour)} 
+                                                    imgStyle={{width: "80%", height: "auto", margin: "auto"}} // inline as this breaks on build in styled components
+                                                    alt={project?.client?.name} 
+                                                />
+                                            </ImageContainer>
+                                        </WorkLink>
+                                    </WorkItem>
+                                ))}
+                            </WorkList>
+                        </WorkSection>
+                    )}
+                </InView>
+                {/* Software */}
+                <InView threshold={0.3} triggerOnce={true}>
+                    {({ inView, ref }) => (
+                        <SoftwareSection className="purple">
+                            <H2 aria-label="Software I've used">{softwareInfo.title}</H2>
+                            <SoftwareList ref={ref}>
+                                {software?.map((software) => (
+                                    <Software $active={inView} key={software?.id}>
+                                        <SoftwareLogo 
+                                            image={getImage(software)} 
+                                            alt={software?.title} 
+                                            objectFit="contain" 
+                                        />
+                                    </Software>
+                                ))}
+                            </SoftwareList>
+                        </SoftwareSection>
+                    )}
+                </InView>
+            </main>
         </>
     );
 };
@@ -245,8 +254,9 @@ const ProfileImageContainer = styled.div`
     };
 `;
 
-const Profile = styled.img`
+const Profile = styled(GatsbyImage)`
     width: 100%;
+    height: auto;
 `;
 
 const H1 = styled.h1`
@@ -277,47 +287,55 @@ const WorkLink = styled(Link)`
     height: 100%;
     transform: translate3d(0,0,0) scale(0);
     ${props => props.$active ? Scale : null};
+
+    &:focus div { /* doesn't work when on their individual styles */
+        background-image: none;
+        opacity: 1;
+    };
 `;
 
 const ImageContainer = styled.div`
     background-color: #2b194d;
-    display: inline-block;
+    display: inline-grid;
     width: 200px;
     height: 200px;
     border: 6px solid #2b194d;
     border-radius: 100%;
     overflow: hidden;
-    background-image: url(${props => props.img});
+    clip-path: circle(50%);
+
+    @media only screen and (max-width: 767px) {
+        width: 175px;
+        height: 175px;
+    };
+`;
+
+const WorkImageBackground = styled(GatsbyImage)`
+    grid-area: 1/1;
 
     &:hover {
-        background-image: none;
+        opacity: 0;
+    };
+
+    // WorkImage blocks the hover state, so pointer-events on that has been turned off and its hover state is now controlled here via adjacent divs
+
+    &:hover + div {
+        opacity: 1;
     };
 
     @media only screen and (max-width: 767px) {
-        background-image: none;
-        width: 175px;
-        height: 175px;
+        opacity: 0;
     };
 `;
 
 const WorkImage = styled(GatsbyImage)`
     opacity: 0;
     width: 100%;
-    /* transform: translate(0px, 73%); */
     height: 100%;
     transition: opacity 0.5s linear 0s;
     vertical-align: middle;
-    clip-path: circle(54%);
-
-    &:hover {
-        opacity: 1;
-    };
-
-    img {
-        width: 80%;
-        height: auto;
-        margin: auto;
-    };
+    grid-area: 1/1;
+    pointer-events: none;
 
     @media only screen and (max-width: 767px) {
         opacity: 1;
