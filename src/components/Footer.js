@@ -44,23 +44,23 @@ export const Footer = ({ props }) => {
                         <List ref={ref} $duration={1} $active={inView}>
                             {contact?.instagram &&
                                 <SocialItem>
-                                    <a href={`https://instagram.com/${contact.instagram}`} aria-label="Instagram">
+                                    <SocialLink href={`https://instagram.com/${contact.instagram}`} aria-label="Instagram">
                                         <SocialIcon src={instagram} alt="Instagram" />
-                                    </a>
+                                    </SocialLink>
                                 </SocialItem>
                             }
                             {contact?.twitter &&
                                 <SocialItem>
-                                    <a href={`https://twitter.com/${contact.twitter}`} aria-label="Twitter">
+                                    <SocialLink href={`https://twitter.com/${contact.twitter}`} aria-label="Twitter">
                                         <SocialIcon src={twitter} alt="Twitter" />
-                                    </a>
+                                    </SocialLink>
                                 </SocialItem>
                             }
                             {contact?.linkedIn &&
                                 <SocialItem>
-                                    <a href={`https://uk.linkedin.com/pub/${contact.linkedIn}`} aria-label="LinkedIn">
+                                    <SocialLink href={`https://uk.linkedin.com/pub/${contact.linkedIn}`} aria-label="LinkedIn">
                                         <SocialIcon src={linkedin} alt="LinkedIn" />
-                                    </a>
+                                    </SocialLink>
                                 </SocialItem>
                             }
                         </List>
@@ -167,7 +167,6 @@ const ContactInfo = styled.ul`
 const SocialItem = styled.li`
     list-style-type: none;
     margin: 0 auto;
-    padding: 1.25em;
     background-color: #2b194d;
     border-radius: 100%;
     transition: all .1s linear;
@@ -175,6 +174,12 @@ const SocialItem = styled.li`
     &:hover, &:focus-within {
         background-color: #00bcd4;
     };
+`;
+
+const SocialLink = styled.a`
+    display: block;
+    padding: 1.25em;
+    border-radius: 100%;
 
     @media only screen and (max-width: 767px) {
         padding: 1em;

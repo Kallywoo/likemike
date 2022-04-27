@@ -70,8 +70,6 @@ const SkipLink = styled.a`
     top: -1000%;
 
     &:focus {
-        /* display: inline-block; */
-        /* position: relative; */
         top: 0;
         left: 33%;
         right: 33%;
@@ -139,8 +137,6 @@ const ProfileTrigger = styled.div`
         margin-left: -150px;
         width: 300px;
         height: 5px;
-        /* background-color: black;
-        z-index: 999; */
 
         @media only screen and (max-width: 767px) {
             top: 45%;

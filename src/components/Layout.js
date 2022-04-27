@@ -34,7 +34,6 @@ const GlobalStyle = createGlobalStyle`
 
     #skip {
         flex: 1;
-        /* padding-top: 3rem; */
     };
 
     section {
