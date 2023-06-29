@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 import { graphql } from 'gatsby';
 import { Link } from 'gatsby';
 import { GatsbyImage, getImage } from 'gatsby-plugin-image';
@@ -128,31 +128,31 @@ export default function IndexPage({ data }) {
                     )}
                 </InView>
                 {/* Blank */}
-                <Filler/>
+                <Filler />
                 {/* Projects */}
-                <InView threshold={0.3} triggerOnce={true}>
+                <InView triggerOnce={true}>
                     {({ inView, ref }) => (
                         <WorkSection>
                             <H2 aria-label="Projects I've worked on for clients">{clients.title}</H2>
                             <WorkList ref={ref}>
                                 {projects?.map((project, i) => (
                                     <WorkItem key={project?.id}>
-                                        <WorkLink 
-                                            to={`/work#${project?.slug}`} 
+                                        <WorkLink
+                                            to={`/work#${project?.slug}`}
                                             aria-label={`${project?.title} for ${project?.client?.name}`}
-                                            $active={inView} 
-                                            $delay={i * 0.2} 
+                                            $active={inView}
+                                            $delay={i * 0.2}
                                         >
                                             <ImageContainer>
-                                                <WorkImageBackground 
-                                                    image={project?.preview?.thumbnail?.gatsbyImageData} 
-                                                    imgStyle={{objectPosition: "0 0"}}
+                                                <WorkImageBackground
+                                                    image={project?.preview?.thumbnail?.gatsbyImageData}
+                                                    imgStyle={{ objectPosition: "0 0" }}
                                                     alt=""
                                                 />
-                                                <WorkImage 
-                                                    image={project?.client?.logo ? getImage(project.client.logo) : getImage(project.client.logoColour)} 
-                                                    imgStyle={{width: "80%", height: "auto", margin: "auto"}} // inline as this breaks on build in styled components
-                                                    alt={project?.client?.name} 
+                                                <WorkImage
+                                                    image={project?.client?.logo ? getImage(project.client.logo) : getImage(project.client.logoColour)}
+                                                    imgStyle={{ width: "80%", height: "auto", margin: "auto" }} // inline as this breaks on build in styled components
+                                                    alt={project?.client?.name}
                                                 />
                                             </ImageContainer>
                                         </WorkLink>
@@ -170,10 +170,10 @@ export default function IndexPage({ data }) {
                             <SoftwareList ref={ref}>
                                 {software?.map((software) => (
                                     <Software $active={inView} key={software?.id}>
-                                        <SoftwareLogo 
-                                            image={getImage(software)} 
-                                            alt={software?.title} 
-                                            objectFit="contain" 
+                                        <SoftwareLogo
+                                            image={getImage(software)}
+                                            alt={software?.title}
+                                            objectFit="contain"
                                         />
                                     </Software>
                                 ))}
